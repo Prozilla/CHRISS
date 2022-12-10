@@ -1,6 +1,6 @@
 # CHRISS
 
-CHRISS is a computerised, humanoid, real-time & intelligent support system with a couple cool features like analysing sentences, simulating human emotions, and much more!
+CHRISS is an advanced chatbot system with cool features like analysing sentences, simulating human emotions, and much more!
 
 ## Installing
 ```
@@ -27,4 +27,25 @@ const responses = {
 const bot = new Bot(name, responses);
 
 console.log(bot.getResponse("hello"));
+```
+Output:
+```js
+{
+  output: 'Hi.',
+  input: {
+    content: 'hello',
+    analysis: Sentence {
+      isSentence: false,
+      isNegative: false,
+      isQuestion: false,
+      questionWord: undefined,
+      verb: undefined,
+      subject: undefined,
+      directObject: undefined,
+      keyWord: 'hello'
+    }
+  },
+  mood: { happy: 100, sad: 0, angry: 0, scared: 0 },
+  context: 0
+}
 ```
