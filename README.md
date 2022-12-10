@@ -8,18 +8,20 @@ npm install chriss
 ```
 ## Setting up a basic bot
 
+Here is how you create a bot that can reply to "Hello!":
+
 ```js
 const { Bot } = require("chriss");
 
 const name = "Test";
 const responses = {
-	0: [
-		{
-			input: ["hello", "hi", "hey", "greetings"],
-			output: ["Hello there.", "Hello.", "Greetings.", "Hi."],
-			end: true,
-		},
-	]
+    0: [
+        {
+            input: ["hello"],
+            output: ["Hello."],
+            end: true,
+        },
+    ]
 };
 
 const bot = new Bot(name, responses);
