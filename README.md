@@ -3,7 +3,7 @@
 CHRISS is an advanced chatbot system with cool features like analysing sentences, simulating human emotions, and much more!
 
 ## Installing
-```
+```bash
 npm install chriss
 ```
 ## Setting up a basic bot
