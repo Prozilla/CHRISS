@@ -1,39 +1,159 @@
-let context = 0;
-
-//#region UTIL
-
 function randomFromArray(array) {
-	return array[Math.floor(Math.random() * array.length)];
+	if (array == null) {
+		return;
+	} else {
+		return array[Math.floor(Math.random() * array.length)];
+	}
 }
 
-//#endregion
-
 class Sentence {
+	/**
+	 * @param {Boolean} isSentence 
+	 * @param {Boolean} isNegative 
+	 * @param {Boolean} questionWord 
+	 * @param {String} isQuestion 
+	 * @param {String} verb 
+	 * @param {String} subject 
+	 * @param {String} directObject 
+	 * @param {String} keyWord 
+	 */
 	constructor(isSentence, isNegative, questionWord, isQuestion, verb, subject, directObject, keyWord) {
-		this.isSentence = isSentence;    // Bool
-		this.isNegative = isNegative;    // Bool
-		this.isQuestion = isQuestion;    // Bool
-		this.questionWord = questionWord;// String
-		this.verb = verb;                // String
-		this.subject = subject;          // String
-		this.directObject = directObject;// String
-		this.keyWord = keyWord;          // String
-	};
-};
+		this.isSentence = isSentence;
+		this.isNegative = isNegative;
+		this.isQuestion = isQuestion;
+		this.questionWord = questionWord;
+		this.verb = verb;
+		this.subject = subject;
+		this.directObject = directObject;
+		this.keyWord = keyWord;
+	}
+}
 
-exports.Preferences = class Preferences {
+export class Input {
+	constructor(isSentence, isNegative, isQuestion, questionWord, verbs, subjects, directObjects) {
+		this.isSentence = isSentence;      // Bool
+		this.isNegative = isNegative;      // Bool
+		this.isQuestion = isQuestion;      // Bool
+		this.questionWord = questionWord;  // String
+		this.verbs = verbs;                // List
+		this.subjects = subjects;          // List
+		this.directObjects = directObjects;// List
+	}
+}
+
+export class Preferences {
+	/**
+	 * @param {Array} likes 
+	 * @param {Array} dislikes 
+	 */
 	constructor(likes, dislikes) {
 		this.likes = likes;
 		this.dislikes = dislikes;
 	}
 }
 
-exports.Bot = class Bot {
+export class Vocabulary {
+	default() {
+		this.questionWords = ["what", "when", "which", "who", "where", "why", "how", "whose"],
+		this.verbs = {
+			"to be": ["am", "are", "is", "was", "were", "being", "been"],
+			"to do": ["do", "does", "did", "doing", "done"],
+			"to have": ["have", "has", "had", "having"],
+			"to tell": ["tell", "tells", "told", "telling"],
+			"to mean": ["mean", "means", "meant", "meaning"],
+			"to love": ["love", "loves", "loved", "loving"], 
+			"to like": ["like", "likes", "liked", "liking"], 
+			"to adore": ["adore", "adores", "adored", "adoring"], 
+			"to admire": ["admire", "admires", "admired", "admiring"],
+			"to make": ["make", "makes", "made", "making"],
+			"to create": ["create", "creates", "created", "creating"],
+			"to work": ["work", "works", "worked", "working",],
+			"to hate": ["hate", "hates", "hated", "hating",],
+			"to dislike": ["dislike", "dislikes", "disliked", "disliking",],
+			"to let": ["let", "lets", "letting"],
+			"to play": ["play", "plays", "played", "playing"],
+			"to take": ["take", "takes", "taking", "taken"],
+			"to know": ["know", "knows", "knowing", "known"]
+		}
+		this.subjects = ["i", "you", "it", "us", "that", "she", "he"]
+		this.directObjects = ["me", "you", "them", "him", "her"]
+		this.possessivePronouns = ["my", "your", "its", "their", "his", "her"]
+		this.articles = ["a", "an", "the", "any", "some"]
+		this.negations = ["not"]
+		this.keyWords = {
+			"yes": ["yes", "yes i am", "hell yeah", "yeah", "positive", "100%", "of course", "by all means", "sure", "certainly", "absolutely", "affirmative"],
+			"no": ["no", "no i am not", "hell no", "not really", "i guess not", "negative", "of course not", "most certainly not", "certainly not", "absolutely not", "by no means", "never"],
+			"insults": ["fat", "ugly", "stupid", "dumb", "slow"],
+			"compliments": ["good", "beautiful", "smart", "clever", "intelligent", "fast", "pretty", "cool", "nice", "amazing", "wonderful", "impressive"],
+			"ready": ["ready", "done", "set"],
+		}
+		this.prepositions = ["to", "in", "into", "on", "onto", "at", "unto"]
+		this.adjectives = ["crumbling"]
+		this.abbreviations = {
+			"wtf": "what the fuck",
+			"wdym": "what do you mean",
+			"wym": "what do you mean",
+			"wth": "what the heck",
+			"hry": "how are you",
+			"hru": "how are you",
+			"tf": "the fuck",
+			"ig": "i guess",
+			"idk": "i do not know",
+			"ur": "you are"
+		}
+
+		return this;
+	}
+
+	addQuestionWord(questionWord) {
+		this.questionWords.push(questionWord);
+		return this;
+	}
+	addSubject(subject) {
+		this.subjects.push(subject);
+		return this;
+	}
+	addDirectObject(directObject) {
+		this.directObjects.push(directObject);
+		return this;
+	}
+	addPossessivePronoun(possessivePronoun) {
+		this.possessivePronouns.push(possessivePronoun);
+		return this;
+	}
+	addArticle(article) {
+		this.articles.push(article);
+		return this;
+	}
+	addNegation(negation) {
+		this.negations.push(negation);
+		return this;
+	}
+	addKeyWord(keyWord) {
+		this.keyWords.push(keyWord);
+		return this;
+	}
+	addPrepositions(preposition) {
+		this.prepositions.push(preposition);
+		return this;
+	}
+	addAdjective(adjective) {
+		this.adjectives.push(adjective);
+		return this;
+	}
+	addAbbreviation(abbreviation) {
+		this.abbreviations.push(abbreviation);
+		return this;
+	}
+}
+
+export class Bot {
 	constructor(name, responses) {
 		this.responses = responses;
 		this.name = name;
 
-		this.preferences = new exports.Preferences();
+		this.preferences = new Preferences();
+		this.vocabulary = new Vocabulary().default();
 
 		this.noResponseMessages = ["Sorry, I didn't understand your message. Try reformatting it.", "Try reformatting your message.", "Sorry, I didn't understand your message.", "I don't know how to respond to that message.", "What do you mean?"];
 		this.noQuestionResponseMessages = ["Sorry, I don't have an answer to that question.", "Sorry, I don't know the answer to that question.", "I don't know.", "I don't know how to answer that."];
@@ -52,18 +172,22 @@ exports.Bot = class Bot {
 
 	setName(name) {
 		this.name = name;
+		return this;
 	}
 
 	setNoResponseMessages(messages) {
 		this.noResponseMessages = messages;
+		return this;
 	}
 
 	setNoQuestionReponseMessages(messages) {
 		this.noQuestionResponseMessages = messages;
+		return this;
 	}
 
 	setErrorMessages(messages) {
 		this.errorMessages = messages;
+		return this;
 	}
 
 	affectMood(mood, amount) {
@@ -105,10 +229,10 @@ exports.Bot = class Bot {
 			// Dynamic input
 			switch (inputs) {
 				case "{positive}":
-					inputs = wordTypes["keyWords"]["yes"];
+					inputs = this.vocabulary["keyWords"]["yes"];
 					break;
 				case "{negative}":
-					inputs = wordTypes["keyWords"]["no"];
+					inputs = this.vocabulary["keyWords"]["no"];
 					break;
 			}
 	
@@ -119,13 +243,13 @@ exports.Bot = class Bot {
 				if (inputSentence.keyWords != null)
 					switch (inputSentence.keyWords) {
 						case "{compliment}":
-							inputSentence.keyWords = wordTypes["keyWords"]["compliments"];
+							inputSentence.keyWords = this.vocabulary["keyWords"]["compliments"];
 							break;
 						case "{insult}":
-							inputSentence.keyWords = wordTypes["keyWords"]["insults"];
+							inputSentence.keyWords = this.vocabulary["keyWords"]["insults"];
 							break;
 						case "{ready}":
-							inputSentence.keyWords = wordTypes["keyWords"]["ready"];
+							inputSentence.keyWords = this.vocabulary["keyWords"]["ready"];
 							break;
 					}
 	
@@ -161,7 +285,7 @@ exports.Bot = class Bot {
 
 	analyseSentence(input) {
 		let sentence = new Sentence();
-		const words = input.replace("?", "").split(" ").filter(word => !wordTypes["articles"].includes(word));
+		const words = input.replace("?", "").split(" ").filter(word => !this.vocabulary["articles"].includes(word));
 	
 		// Check if sentence is a full sentence
 		sentence.isSentence = words.length > 2 ? true : false;
@@ -173,26 +297,26 @@ exports.Bot = class Bot {
 	
 		for (let i = 0; i < words.length; i++) {
 			// Get question word
-			if (sentence.questionWord == null && wordTypes["questionWords"].includes(words[i])) {
+			if (sentence.questionWord == null && this.vocabulary["questionWords"].includes(words[i])) {
 				sentence.questionWord = words[i];
 				sentence.isQuestion = true;
 				continue;
 			}
 	
-			if (words[i] == "page" && Object.keys(wordTypes["pageNames"]).includes(words[i - 1])) {
+			if (words[i] == "page" && Object.keys(this.vocabulary["pageNames"]).includes(words[i - 1])) {
 				continue; // Ex.: Home page
 			}
 	
 			// Get subject
 			if (sentence.subject == null)
-				if (wordTypes["subjects"].includes(words[i])) {
+				if (this.vocabulary["subjects"].includes(words[i])) {
 					sentence.subject = words[i];
 					continue;
-				} else if (wordTypes["PossessivePronouns"].includes(words[i])) {
+				} else if (this.vocabulary["PossessivePronouns"].includes(words[i])) {
 					sentence.subject = words[i] + " " + words[i + 1]; // Ex.: Your name
 					i++;
 					continue;
-				} else if (wordTypes["prepositions"].includes(words[i])) {
+				} else if (this.vocabulary["prepositions"].includes(words[i])) {
 					sentence.subject = words[i] + " " + words[i + 1]; // Ex.: To the home page
 					i++;
 					continue;
@@ -200,7 +324,7 @@ exports.Bot = class Bot {
 			
 			// Get verb
 			let isVerb = false;
-			for (const [key, value] of Object.entries(wordTypes["verbs"])) {
+			for (const [key, value] of Object.entries(this.vocabulary["verbs"])) {
 				if (value.includes(words[i])) {
 					sentence.verb = key;
 					isVerb = true;
@@ -209,22 +333,22 @@ exports.Bot = class Bot {
 			};
 	
 			// Get direct object
-			if (sentence.directObject == null && (wordTypes["directObjects"].includes(words[i]) || 
+			if (sentence.directObject == null && (this.vocabulary["directObjects"].includes(words[i]) || 
 				(i == 1 && sentence.questionWord != null) || 
-				(sentence.isQuestion && wordTypes["verbs"]["to have"].includes(words[i - 1])))) 
+				(sentence.isQuestion && this.vocabulary["verbs"]["to have"].includes(words[i - 1])))) 
 			{
 				sentence.directObject = words[i];
 				continue;
 			}
 	
 			// Get key word
-			if (sentence.keyWord == null && !sentence.isQuestion && wordTypes["verbs"]["to be"].includes(words[i - 1])) {
+			if (sentence.keyWord == null && !sentence.isQuestion && this.vocabulary["verbs"]["to be"].includes(words[i - 1])) {
 				sentence.keyWord = words[i];
 				continue;
 			}
 	
 			// Check if sentence is negative
-			if (wordTypes["negative"].includes(words[i])) {
+			if (this.vocabulary["negative"].includes(words[i])) {
 				sentence.isNegative = true;
 				continue;		
 			}
@@ -240,7 +364,24 @@ exports.Bot = class Bot {
 
 	getResponse(input) {
 		// Clean input string
-		const cleanInput = input.toLowerCase().split("!").join("").split(".").join("").split(",").join("").split("/[\u2018\u2019]/g").join("'").split("let's").join("let us").split("'s").join(" is").split("'re").join(" are").split("'m").join(" am").split("n't").join(" not").trim();
+		const cleanInput = input.toLowerCase()
+			.split("!").join("")
+			.split(".").join("")
+			.split(",").join("")
+			.split("/[\u2018\u2019]/g").join("'")
+			.split("let's").join("let us")
+			.split("'s").join(" is")
+			.split("'re").join(" are")
+			.split("'m").join(" am")
+			.split("n't").join(" not")
+			.trim();
+
+		// Remove abbreviations
+		cleanInput = cleanInput.split(" ").forEach((word) => {
+			if (Object.keys(this.vocabulary.abbreviations).includes(word))
+				word = this.vocabulary.abbreviations[word];
+		}).join(" ");
+
 		const analysedInput = this.analyseSentence(cleanInput);
 	
 		let output;
@@ -332,54 +473,5 @@ exports.Bot = class Bot {
 		}
 
 		return { output, input: { content: cleanInput, analysis: analysedInput }, mood: this.moods, context: this.context };
-	}
-}
-
-const wordTypes = {
-	questionWords: ["what", "when", "which", "who", "where", "why", "how", "whose"],
-	verbs: {
-		"to be": ["am", "are", "is", "was", "were", "being", "been"],
-		"to do": ["do", "does", "did", "doing", "done"],
-		"to have": ["have", "has", "had", "having"],
-		"to tell": ["tell", "tells", "told", "telling"],
-		"to mean": ["mean", "means", "meant", "meaning"],
-		"to love": ["love", "loves", "loved", "loving"], 
-		"to like": ["like", "likes", "liked", "liking"], 
-		"to adore": ["adore", "adores", "adored", "adoring"], 
-		"to admire": ["admire", "admires", "admired", "admiring"],
-		"to make": ["make", "makes", "made", "making"],
-		"to create": ["create", "creates", "created", "creating"],
-		"to work": ["work", "works", "worked", "working",],
-		"to hate": ["hate", "hates", "hated", "hating",],
-		"to dislike": ["dislike", "dislikes", "disliked", "disliking",],
-		"to let": ["let", "lets", "letting"],
-		"to play": ["play", "plays", "played", "playing"],
-		"to take": ["take", "takes", "taking", "taken"],
-	},
-	subjects: ["i", "you", "it", "us", "that", "chriss", "prozilla", "crumbling city"],
-	directObjects: ["me", "you", "them"],
-	PossessivePronouns: ["my", "your", "its"],
-	articles: ["a", "an", "the", "any", "some"],
-	negative: ["not"],
-	keyWords: {
-		"yes": ["yes", "yes i am", "hell yeah", "yeah", "positive", "100%", "of course", "by all means", "sure", "certainly", "absolutely", "affirmative"],
-		"no": ["no", "no i am not", "hell no", "not really", "i guess not", "negative", "of course not", "most certainly not", "certainly not", "absolutely not", "by no means", "never"],
-		"insults": ["fat", "ugly", "stupid", "dumb", "slow"],
-		"compliments": ["good", "beautiful", "smart", "clever", "intelligent", "fast", "pretty", "cool", "nice", "amazing", "wonderful", "impressive"],
-		"ready": ["ready", "done", "set"],
-	},
-	prepositions: ["to", "in", "into", "on", "onto", "at"],
-	adjectives: ["crumbling"]
-};
-
-exports.Input = class Input {
-	constructor(isSentence, isNegative, isQuestion, questionWord, verbs, subjects, directObjects) {
-		this.isSentence = isSentence;      // Bool
-		this.isNegative = isNegative;      // Bool
-		this.isQuestion = isQuestion;      // Bool
-		this.questionWord = questionWord;  // String
-		this.verbs = verbs;                // List
-		this.subjects = subjects;          // List
-		this.directObjects = directObjects;// List
 	}
 }

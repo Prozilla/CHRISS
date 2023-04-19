@@ -1,15 +1,16 @@
 {
-  "name": "chriss",
-  "version": "1.0.27",
-  "description": "Computerised, Humanoid, Real-time & Intelligent Support System",
-  "main": "chriss.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "chatbot",
-    "bot"
-  ],
-  "author": "Prozilla",
-  "license": "ISC"
+	"name": "chriss",
+	"version": "1.0.27",
+	"description": "Computerised, Humanoid, Real-time & Intelligent Support System",
+	"main": "chriss.js",
+	"type": "module",
+	"scripts": {
+		"test": "nodemon test/test.js"
+	},
+	"keywords": [
+		"chatbot",
+		"bot"
+	],
+	"author": "Prozilla",
+	"license": "ISC"
 }
