@@ -149,15 +149,31 @@ export class Vocabulary {
 
 export class Bot {
 	constructor(name, responses) {
-		this.responses = responses;
 		this.name = name;
+		this.responses = responses;
 
 		this.preferences = new Preferences();
 		this.vocabulary = new Vocabulary().default();
 
-		this.noResponseMessages = ["Sorry, I didn't understand your message. Try reformatting it.", "Try reformatting your message.", "Sorry, I didn't understand your message.", "I don't know how to respond to that message.", "What do you mean?"];
-		this.noQuestionResponseMessages = ["Sorry, I don't have an answer to that question.", "Sorry, I don't know the answer to that question.", "I don't know.", "I don't know how to answer that."];
-		this.errorMessages = ["Oh no! An error occured!", "Oh no! I have encountered an error!"];
+		this.setNoResponseMessages([
+			"Sorry, I didn't understand your message. Try reformatting it.",
+			"Try reformatting your message.",
+			"Sorry, I didn't understand your message.",
+			"I don't know how to respond to that message.",
+			"What do you mean?"
+		]);
+
+		this.setNoQuestionReponseMessages([
+			"Sorry, I don't have an answer to that question.",
+			"Sorry, I don't know the answer to that question.",
+			"I don't know.",
+			"I don't know how to answer that."
+		]);
+
+		this.setErrorMessages([
+			"Oh no! An error occured!",
+			"Oh no! I have encountered an error!"
+		]);
 
 		this.context = 0;
 
@@ -229,10 +245,10 @@ export class Bot {
 			// Dynamic input
 			switch (inputs) {
 				case "{positive}":
-					inputs = this.vocabulary["keyWords"]["yes"];
+					inputs = this.vocabulary.keyWords.yes;
 					break;
 				case "{negative}":
-					inputs = this.vocabulary["keyWords"]["no"];
+					inputs = this.vocabulary.keyWords.no;
 					break;
 			}
 	
@@ -243,13 +259,13 @@ export class Bot {
 				if (inputSentence.keyWords != null)
 					switch (inputSentence.keyWords) {
 						case "{compliment}":
-							inputSentence.keyWords = this.vocabulary["keyWords"]["compliments"];
+							inputSentence.keyWords = this.vocabulary.keyWords.compliments;
 							break;
 						case "{insult}":
-							inputSentence.keyWords = this.vocabulary["keyWords"]["insults"];
+							inputSentence.keyWords = this.vocabulary.keyWords.insults;
 							break;
 						case "{ready}":
-							inputSentence.keyWords = this.vocabulary["keyWords"]["ready"];
+							inputSentence.keyWords = this.vocabulary.keyWords.ready;
 							break;
 					}
 	
@@ -285,7 +301,7 @@ export class Bot {
 
 	analyseSentence(input) {
 		let sentence = new Sentence();
-		const words = input.replace("?", "").split(" ").filter(word => !this.vocabulary["articles"].includes(word));
+		const words = input.replace("?", "").split(" ").filter(word => !this.vocabulary.articles.includes(word));
 	
 		// Check if sentence is a full sentence
 		sentence.isSentence = words.length > 2 ? true : false;
@@ -297,26 +313,22 @@ export class Bot {
 	
 		for (let i = 0; i < words.length; i++) {
 			// Get question word
-			if (sentence.questionWord == null && this.vocabulary["questionWords"].includes(words[i])) {
+			if (sentence.questionWord == null && this.vocabulary.questionWords.includes(words[i])) {
 				sentence.questionWord = words[i];
 				sentence.isQuestion = true;
 				continue;
 			}
 	
-			if (words[i] == "page" && Object.keys(this.vocabulary["pageNames"]).includes(words[i - 1])) {
-				continue; // Ex.: Home page
-			}
-	
 			// Get subject
 			if (sentence.subject == null)
-				if (this.vocabulary["subjects"].includes(words[i])) {
+				if (this.vocabulary.subjects.includes(words[i])) {
 					sentence.subject = words[i];
 					continue;
-				} else if (this.vocabulary["PossessivePronouns"].includes(words[i])) {
+				} else if (this.vocabulary.possessivePronouns.includes(words[i])) {
 					sentence.subject = words[i] + " " + words[i + 1]; // Ex.: Your name
 					i++;
 					continue;
-				} else if (this.vocabulary["prepositions"].includes(words[i])) {
+				} else if (this.vocabulary.prepositions.includes(words[i])) {
 					sentence.subject = words[i] + " " + words[i + 1]; // Ex.: To the home page
 					i++;
 					continue;
@@ -324,7 +336,7 @@ export class Bot {
 			
 			// Get verb
 			let isVerb = false;
-			for (const [key, value] of Object.entries(this.vocabulary["verbs"])) {
+			for (const [key, value] of Object.entries(this.vocabulary.verbs)) {
 				if (value.includes(words[i])) {
 					sentence.verb = key;
 					isVerb = true;
@@ -333,22 +345,22 @@ export class Bot {
 			};
 	
 			// Get direct object
-			if (sentence.directObject == null && (this.vocabulary["directObjects"].includes(words[i]) || 
+			if (sentence.directObject == null && (this.vocabulary.directObjects.includes(words[i]) || 
 				(i == 1 && sentence.questionWord != null) || 
-				(sentence.isQuestion && this.vocabulary["verbs"]["to have"].includes(words[i - 1])))) 
+				(sentence.isQuestion && this.vocabulary.verbs["to have"].includes(words[i - 1])))) 
 			{
 				sentence.directObject = words[i];
 				continue;
 			}
 	
 			// Get key word
-			if (sentence.keyWord == null && !sentence.isQuestion && this.vocabulary["verbs"]["to be"].includes(words[i - 1])) {
+			if (sentence.keyWord == null && !sentence.isQuestion && this.vocabulary.verbs["to be"].includes(words[i - 1])) {
 				sentence.keyWord = words[i];
 				continue;
 			}
 	
 			// Check if sentence is negative
-			if (this.vocabulary["negative"].includes(words[i])) {
+			if (this.vocabulary.negations.includes(words[i])) {
 				sentence.isNegative = true;
 				continue;		
 			}
@@ -364,7 +376,7 @@ export class Bot {
 
 	getResponse(input) {
 		// Clean input string
-		const cleanInput = input.toLowerCase()
+		let cleanInput = input.toLowerCase()
 			.split("!").join("")
 			.split(".").join("")
 			.split(",").join("")
@@ -377,9 +389,12 @@ export class Bot {
 			.trim();
 
 		// Remove abbreviations
-		cleanInput = cleanInput.split(" ").forEach((word) => {
-			if (Object.keys(this.vocabulary.abbreviations).includes(word))
-				word = this.vocabulary.abbreviations[word];
+		cleanInput = cleanInput.split(" ").map((word) => {
+			if (Object.keys(this.vocabulary.abbreviations).includes(word)) {
+				return this.vocabulary.abbreviations[word];
+			} else {
+				return word;
+			}
 		}).join(" ");
 
 		const analysedInput = this.analyseSentence(cleanInput);
