@@ -16,7 +16,7 @@ npm install chriss
 
 Follow this small step by step guide to create a simple bot that can greet users:
 
-1. Create bot.js and write the following code inside:
+1. Create `bot.js` and write the following code inside:
 
 ```JS
 // bot.js
@@ -24,7 +24,8 @@ import { Bot } from "chriss";
 
 const name = "Example bot";
 const responses = {
-	// The key of the objects in this dictionary refer to the context value, this will be explained in detail later on
+	// The key of the objects in this dictionary refer to the context value, 
+	// this will be explained in detail later on
     0: [
         {
             input: ["hello"], // User input (case-insensitive)
@@ -37,7 +38,7 @@ const responses = {
 export const bot = new Bot(name, responses);
 ```
 
-2. Create index.js and write the following code inside:
+2. Create `index.js` and write the following code inside:
 
 ```JS
 // index.js
@@ -58,11 +59,11 @@ console.log(response);
 node index.js
 ```
 
-4. You will see the following output logged to the console:
+4. You should see the following output logged to the console:
 
 ```js
 {
-	output: "Hi.",
+	output: "Hello.",
 	input: {
 		content: "hello",
 		analysis: Sentence {
