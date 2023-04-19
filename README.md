@@ -8,7 +8,7 @@ Some of its most outstanding features are: advanced sentence analysis that can u
 
 ## Installing
 
-```BASH
+```shell
 npm install chriss
 ```
 
@@ -55,13 +55,13 @@ console.log(response);
 
 3. To test your brand new bot, run the following command:
 
-```bash
+```shell
 node index.js
 ```
 
 4. You should see the following output logged to the console:
 
-```js
+```shell
 {
 	output: "Hello.",
 	input: {
